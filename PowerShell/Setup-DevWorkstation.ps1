@@ -9,6 +9,7 @@ Author: @JamesDBartlett3
 
 TODO: Handle admin
 TODO: Add call to Install-PSModules.ps1
+TODO: Add option to overwrite local Microsoft.PowerShell_profile.ps1 with the one from this repo 
 
 Based on this gist: https://gist.github.com/Codebytes/29bf18015f6e93fca9421df73c6e512c
 
