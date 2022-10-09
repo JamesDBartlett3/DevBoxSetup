@@ -15,4 +15,12 @@
   ## Gives completions/suggestions from historical commands
   Set-PSReadLineOption -PredictionSource History
   
+# PowerShell Prompt Mods & Themes
+  ## Enable git repo status awareness with Posh-Git
+  Import-Module posh-git
+  ## Enable PowerShell prompt theming with Oh-My-Posh
+  Import-Module oh-my-posh
+  ## Set Oh-My-Posh theme to "Powerlevel10k-Classic"
+  Set-Theme Powerlevel10k-Classic
+
 # Other Stuff:
