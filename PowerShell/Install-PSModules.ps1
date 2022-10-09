@@ -1,16 +1,17 @@
 <################################################################/
 
-Install_PowerShell_Modules.ps1
+Install-PSModules.ps1
 
 Installs PowerShell Modules Useful for BI, DA, and DS Development
 
 Usage: 
-pwsh -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/JamesDBartlett3/PoshBits/main/Install_PowerShell_Modules.ps1'))"
+pwsh -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/JamesDBartlett3/DevBoxSetup/main/PowerShell/Install-PSModules.ps1'))"
 
 Author: @JamesDBartlett3
 
 /################################################################>
 
+# Override locally cached copy of this script in case changes have been made since last run
 [System.Net.ServicePointManager]::DnsRefreshTimeout = 0
 
 if ($PSVersionTable.PSVersion.Major -lt 7) {
@@ -19,12 +20,12 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 	$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 	exit
 } else {
-	Function Draw-Separator {
-	    [CmdletBinding()]
-	    Param(
-		[Parameter(Mandatory=$false)]
-		[int]$Length = $Host.UI.RawUI.WindowSize.Width
-	    )
+	Function New-Separator {
+		[CmdletBinding()]
+		Param(
+			[Parameter(Mandatory=$false)]
+			[int]$Length = $Host.UI.RawUI.WindowSize.Width
+		)
 	    Write-Host ('-' * $Length)
 	}
 
@@ -66,8 +67,9 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		, "Metadata"
 		, "MicrosoftPowerBIMgmt"
 		, "MicrosoftTeams"
-		, "Microsoft.Online.SharePoint.PowerShell"
 		, "Microsoft.Graph"
+		, "Microsoft.Online.SharePoint.PowerShell"
+		, "Microsoft.PowerShell.GraphicalTools"
 		, "ModuleBuilder"
 		, "MSOnline"
 		, "oh-my-posh"
@@ -96,12 +98,12 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 
 	# Loop through $modules object and install each module
 	foreach ($module in $modules) {
-		Draw-Separator
+		New-Separator
 		Write-Output "Installing module: '$module'..."
 		Install-Module -Name $module -Scope CurrentUser -Repository PSGallery -AcceptLicense -AllowPrerelease -Force
 	}
 
-	Draw-Separator
+	New-Separator
 
 	# Update local help cache
 	Update-Help -ErrorAction SilentlyContinue
