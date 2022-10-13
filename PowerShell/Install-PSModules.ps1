@@ -38,9 +38,8 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 	# 	Start-Process pwsh.exe $a -Verb RunAs; exit}
 
 	# Declare list of PowerShell modules to install
-	[PSCustomObject]$modules = @(
-		"Az.Accounts"
-		, "Az.AnalysisServices"
+	[array]$modules = @(
+		"Az.AnalysisServices"
 		, "Az.ApiManagement"
 		, "Az.AppConfiguration"
 		, "Az.DataFactory"
@@ -55,10 +54,9 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		, "Az.Synapse"
 		, "AzureAD"
 		, "AzureADPreview"
-		, "Configuration"
 		, "DataGateway"
 		, "DataGateway.Profile"
-		, "DataMashup"
+		# , "DataMashup" # requires -AllowPrerelease
 		, "dbatools"
 		, "dbops"
 		, "ExchangePowerShell"
@@ -74,7 +72,6 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		, "MSOnline"
 		, "oh-my-posh"
 		, "OnPremisesDataGatewayHAMgmt"
-		, "Pester"
 		, "posh-git"
 		, "PowerHTML"
 		, "PowerShell-Beautifier"
@@ -100,7 +97,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 	foreach ($module in $modules) {
 		New-Separator
 		Write-Output "Installing module: '$module'..."
-		Install-Module -Name $module -Scope CurrentUser -Repository PSGallery -AllowClobber -AcceptLicense -AllowPrerelease -Force
+		Install-Module -Name $module -Scope CurrentUser -Repository PSGallery -AllowClobber -AcceptLicense -Force
 	}
 
 	New-Separator
