@@ -98,8 +98,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 	foreach ($module in $modules) {
 		New-Separator
 		Write-Output "Installing module: '$module'..."
-		Install-Module -Name $module -Scope CurrentUser -Repository PSGallery -AllowClobber -AcceptLicense -Force
-		Import-Module -Name $module
+		Install-Module -Name $module -Scope CurrentUser -Repository PSGallery -AllowClobber -AcceptLicense
 	}
 
 	New-Separator
