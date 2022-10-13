@@ -69,7 +69,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		, "MicrosoftTeams"
 		, "Microsoft.Graph"
 		, "Microsoft.Online.SharePoint.PowerShell"
-		, "Microsoft.PowerShell.GraphicalTools"
+		, "Microsoft.PowerShell.ConsoleGuiTools"
 		, "ModuleBuilder"
 		, "MSOnline"
 		, "oh-my-posh"
