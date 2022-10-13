@@ -71,7 +71,6 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		, "Microsoft.PowerShell.ConsoleGuiTools"
 		, "ModuleBuilder"
 		, "MSOnline"
-		, "oh-my-posh"
 		, "OnPremisesDataGatewayHAMgmt"
 		, "posh-git"
 		, "PowerHTML"
