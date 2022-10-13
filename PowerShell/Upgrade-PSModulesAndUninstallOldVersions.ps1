@@ -20,9 +20,9 @@ Author: @JamesDBartlett3
 Function Add-Separator {
     Param(
         [Parameter(Mandatory=$false)]
-        [int]$Length = $Host.UI.RawUI.WindowSize.Width
+        [int]$Width = $Host.UI.RawUI.WindowSize.Width
     )
-    Write-Host ('-' * $Length)
+    Write-Host ('-' * $Width)
 }
 
 Add-Separator
