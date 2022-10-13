@@ -17,8 +17,7 @@ Author: @JamesDBartlett3
 
 [System.Net.ServicePointManager]::DnsRefreshTimeout = 0
 
-Function Draw-Separator {
-    [CmdletBinding()]
+Function Add-Separator {
     Param(
         [Parameter(Mandatory=$false)]
         [int]$Length = $Host.UI.RawUI.WindowSize.Width
@@ -26,12 +25,12 @@ Function Draw-Separator {
     Write-Host ('-' * $Length)
 }
 
-Draw-Separator
+Add-Separator
 
 Write-Host "Checking installed modules for available updates and/or old version(s) to uninstall..." `
   -ForegroundColor Blue -BackgroundColor Black
 
-Draw-Separator
+Add-Separator
 
 # Get all installed modules for which an update is available
 $mods = Get-InstalledModule | Compare-Module |
@@ -77,7 +76,7 @@ foreach ($m in $mods) {
 
     }
 
-    Draw-Separator
+    Add-Separator
 
   }
 
