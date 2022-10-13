@@ -45,7 +45,7 @@ foreach ($m in $mods) {
   if ($m.UpdateNeeded) {
     Write-Host "Updating '$name' module..." `
       -ForegroundColor Yellow -BackgroundColor Black
-    Update-Module -Name $name
+    Update-Module -Name $name -AcceptLicense
 
   }
 
