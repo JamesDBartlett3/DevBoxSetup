@@ -39,7 +39,8 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 
 	# Declare list of PowerShell modules to install
 	[array]$modules = @(
-		"Az.AnalysisServices"
+		"Az.Accounts"
+		,"Az.AnalysisServices"
 		, "Az.ApiManagement"
 		, "Az.AppConfiguration"
 		, "Az.DataFactory"
