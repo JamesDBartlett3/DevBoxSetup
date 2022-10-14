@@ -10,6 +10,8 @@ Author: @JamesDBartlett3
 TODO: Handle admin
 TODO: Add call to Install-PSModules.ps1
 TODO: Add option to overwrite local Microsoft.PowerShell_profile.ps1 with the one from this repo 
+TODO: Install Chocolatey
+TODO: Install Scoop
 
 Based on this gist: https://gist.github.com/Codebytes/29bf18015f6e93fca9421df73c6e512c
 
@@ -115,3 +117,15 @@ Foreach ($app in $apps)
     Write-host "Uninstalling:" $app
     Get-AppxPackage -allusers $app | Remove-AppxPackage
 }
+
+#Install Chocolatey
+
+#Install Scoop
+
+#Perform System Tweaks
+Write-Output "Symlinking `e[38;2;0;255;0mMicrosoft.VSCode_profile.ps1`e[0m -> `e[38;2;0;255;0mMicrosoft.PowerShell_profile.ps1`e[0m..."
+    $profileDir = Split-Path $PROFILE
+    $vsCodeProfile = Join-Path $profileDir "Microsoft.VSCode_profile.ps1"
+    $psProfile = Join-Path $profileDir "Microsoft.PowerShell_profile.ps1"
+    New-Item -ItemType SymbolicLink -Path $vsCodeProfile -Target $psProfile
+
