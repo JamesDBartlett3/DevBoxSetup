@@ -124,8 +124,8 @@ Foreach ($app in $apps)
 
 #Perform System Tweaks
 Write-Output "Symlinking `e[38;2;0;255;0mMicrosoft.VSCode_profile.ps1`e[0m -> `e[38;2;0;255;0mMicrosoft.PowerShell_profile.ps1`e[0m..."
-    $profileDir = Split-Path $PROFILE
-    $vsCodeProfile = Join-Path $profileDir "Microsoft.VSCode_profile.ps1"
-    $psProfile = Join-Path $profileDir "Microsoft.PowerShell_profile.ps1"
-    New-Item -ItemType SymbolicLink -Path $vsCodeProfile -Target $psProfile
+$profileDir = Split-Path $PROFILE
+$vsCodeProfile = Join-Path $profileDir "Microsoft.VSCode_profile.ps1"
+$psProfile = Join-Path $profileDir "Microsoft.PowerShell_profile.ps1"
+New-Item -ItemType SymbolicLink -Path $vsCodeProfile -Target $psProfile
 
