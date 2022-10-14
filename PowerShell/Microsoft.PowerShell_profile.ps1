@@ -3,7 +3,7 @@
 
 # PSReadLine Mods
 ## Import PSReadLine
-Import-Module PSReadLine
+# Import-Module PSReadLine
 ## Tab - Gives a menu of suggestions
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 ## UpArrow will show the most recent command
