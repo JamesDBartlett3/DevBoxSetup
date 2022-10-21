@@ -65,8 +65,7 @@ $apps = @(
     @{name = "Microsoft.AzureStorageExplorer" }, 
     @{name = "Microsoft.PowerToys" }, 
     @{name = "Microsoft.PowerBI" },
-    @{name = "Git.Git" }, 
-    # @{name = "Docker.DockerDesktop" },
+    @{name = "Git.Git" },
     @{name = "Microsoft.dotnet" },
     @{name = "GitHub.cli" },
     @{name = "DaxStudio.DaxStudio" },
@@ -75,7 +74,7 @@ $apps = @(
     # @{name = "Microsoft.Git" },
     @{name = "GitHub.GitLFS" },
     @{name = "JanDeDobbeleer.OhMyPosh" },
-    @{name = "winpython.winpython" },
+    # @{name = "winpython.winpython" },
     # @{name = "Canonical.Ubuntu" },
     # @{name = "beekeeper-studio.beekeeper-studio" },
     @{name = "gerardog.gsudo" },
@@ -86,7 +85,7 @@ $apps = @(
     @{name = "Microsoft.AzureStorageEmulator" },
     @{name = "7zip.7zip" },
     # @{name = "voidtools.Everything" },
-    # @{name = "9P7KNL5RWT25"; source = "msstore"}, # alternate source for Sysinternals Suite
+    # @{name = "Sysinternals Suite"; source = "msstore"}, 
     # @{name = "SamHocevar.WinCompose" }
     @{name = "Microsoft.Sysinternals" }
 )
