@@ -121,6 +121,7 @@ Foreach ($app in $apps)
 # apps: dotnet, dotnet-sdk, dotnetcore, dotnetcore-sdk
 
 # Install Scoop
+# apps: busybox, oh-my-posh, onecommander
 
 #Perform System Tweaks
 Write-Output "Symlinking `e[38;2;0;255;0mMicrosoft.VSCode_profile.ps1`e[0m -> `e[38;2;0;255;0mMicrosoft.PowerShell_profile.ps1`e[0m..."
