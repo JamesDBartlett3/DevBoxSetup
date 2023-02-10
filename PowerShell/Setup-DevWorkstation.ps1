@@ -58,6 +58,8 @@ $settingsJson | Out-File $settingsPath -Encoding utf8
 #Install New apps
 Write-Output "Installing Apps"
 $apps = @(
+    @{name = "Chocolatey.ChocolateyGUI" },
+    @{name = "Microsoft.Edge" },
     @{name = "Microsoft.AzureCLI" }, 
     @{name = "Microsoft.PowerShell" }, 
     @{name = "Microsoft.VisualStudioCode" }, 
@@ -66,7 +68,12 @@ $apps = @(
     @{name = "Microsoft.PowerToys" }, 
     @{name = "Microsoft.PowerBI" },
     @{name = "Git.Git" },
-    @{name = "Microsoft.dotnet" },
+    @{name = "Microsoft.DotNet.Runtime.7" },
+    @{name = "Microsoft.DotNet.DesktopRuntime.7" },
+    # @{name = "Microsoft.DotNet.Runtime.6" },
+    # @{name = "Microsoft.DotNet.DesktopRuntime.6" },
+    @{name = "Microsoft.DotNet.SDK.7" },
+    # @{name = "Microsoft.DotNet.SDK.6" },
     @{name = "GitHub.cli" },
     @{name = "DaxStudio.DaxStudio" },
     @{name = "GitHub.GitHubDesktop" },
@@ -85,8 +92,8 @@ $apps = @(
     @{name = "Microsoft.AzureStorageEmulator" },
     @{name = "7zip.7zip" },
     # @{name = "voidtools.Everything" },
-    # @{name = "Sysinternals Suite"; source = "msstore"}, 
-    # @{name = "SamHocevar.WinCompose" }
+    @{name = "Sysinternals Suite"; source = "msstore"}, 
+    @{name = "Microsoft PowerToys"; source = "msstore"}, # PowerToys
     @{name = "Microsoft.Sysinternals" }
 )
 
