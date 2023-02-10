@@ -5,7 +5,7 @@ Setup-DevWorkstation.ps1
 Usage:
 PowerShell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/JamesDBartlett3/DevBoxSetup/main/PowerShell/Setup-DevWorkstation.ps1'))"
 
-Author: @JamesDBartlett3
+Author: @JamesDBartlett3@techhub.social
 
 TODO: Handle admin
 TODO: Add call to Install-PSModules.ps1

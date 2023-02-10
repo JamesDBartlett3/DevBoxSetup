@@ -7,7 +7,7 @@ Installs PowerShell Modules Useful for BI, DA, and DS Development
 Usage: 
 pwsh -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/JamesDBartlett3/DevBoxSetup/main/PowerShell/Install-PSModules.ps1'))"
 
-Author: @JamesDBartlett3
+Author: @JamesDBartlett3@techhub.social
 
 /################################################################>
 
