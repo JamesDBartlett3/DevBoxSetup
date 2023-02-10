@@ -80,6 +80,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		, "PowerShellNotebook"
 		, "PowerShellProTools"
 		, "ps2exe"
+    , "psedit" # https://github.com/ironmansoftware/psedit
 		, "PSFramework"
 		, "PSKoans"
 		, "PSReadLine"
