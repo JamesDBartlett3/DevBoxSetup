@@ -60,6 +60,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		# , "DataMashup" # requires -AllowPrerelease
 		, "dbatools"
 		, "dbops"
+    , "DynamicTitle"
 		, "ExchangePowerShell"
 		, "ImportExcel"
 		, "InvokeBuild"
