@@ -9,6 +9,7 @@ Author: @JamesDBartlett3@techhub.social
 
 TODO: Handle admin
 TODO: Add call to Install-PSModules.ps1
+TODO: Let user choose apps to install from an Out-ConsoleGridView list
 TODO: Add option to overwrite local Microsoft.PowerShell_profile.ps1 with the one from this repo 
 TODO: Install Chocolatey
 TODO: Install Scoop
