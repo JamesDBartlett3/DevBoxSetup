@@ -112,8 +112,8 @@ Foreach ($app in $apps) {
 #Remove Apps
 Write-Output "Removing Bloatware Apps..."
 
-$apps = "*3DPrint*", "Microsoft.MixedReality.Portal", "*Xbox*", "Microsoft.Getstarted*"
-Foreach ($app in $apps)
+$bloatware = "*3DPrint*", "Microsoft.MixedReality.Portal", "*Xbox*", "Microsoft.Getstarted*"
+Foreach ($app in $bloatware)
 {
   Write-Host "Uninstalling:" $app
   Get-AppxPackage -allusers $app | Remove-AppxPackage
