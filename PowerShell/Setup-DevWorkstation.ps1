@@ -70,6 +70,7 @@ $apps = @(
   # @{name = "Microsoft.DotNet.SDK.6" },
   @{name = "GitHub.cli" },
   @{name = "DaxStudio.DaxStudio" },
+  @{name = "Tabular Editor"},
   # @{name = "GitHub.GitHubDesktop" },
   @{name = "Microsoft.Git" },
   @{name = "Microsoft.GitCredentialManagerCore" },
@@ -103,8 +104,7 @@ Foreach ($app in $apps) {
     else {
       winget install --exact --silent $app.name 
     }
-  }
-  else {
+  } else {
     Write-Host "Skipping Install of " $app.name
   }
 }
