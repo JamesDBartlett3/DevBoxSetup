@@ -89,6 +89,7 @@ $apps = @(
   @{name = "Sysinternals Suite"; source = "msstore"}, 
   @{name = "Microsoft PowerToys"; source = "msstore"}, # PowerToys
   @{name = "Microsoft.Sysinternals" }
+  @{name = "Protecc"; source = "msstore"}
 )
 
 winget list --accept-source-agreements | Out-Null;
