@@ -91,6 +91,8 @@ $apps = @(
   @{name = "Sysinternals Suite"; source = "msstore"}, 
   @{name = "Microsoft PowerToys"; source = "msstore"}, # PowerToys
   @{name = "Microsoft.Sysinternals" }
+  @{name = "WinFsp.WinFsp" },
+  @{name = "SSHFS-Win.SSHFS-Win" },
   @{name = "Protecc"; source = "msstore"}
 )
 
