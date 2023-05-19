@@ -7,7 +7,7 @@ Installs PowerShell Modules Useful for BI, DA, and DS Development
 Usage: 
 pwsh -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/JamesDBartlett3/DevBoxSetup/main/PowerShell/Install-PSModules.ps1'))"
 
-Author: @JamesDBartlett3@techhub.social
+Author: @JamesDBartlett3 (https://techhub.social/@JamesDBartlett3)
 
 /################################################################>
 
@@ -54,7 +54,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		, "Az.Storage"
 		, "Az.Synapse"
 		, "AzureAD"
-		, "AzureADPreview"
+		# , "AzureADPreview"
 		, "DataGateway"
 		, "DataGateway.Profile"
 		# , "DataMashup" # requires -AllowPrerelease
@@ -71,8 +71,10 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		, "Microsoft.Online.SharePoint.PowerShell"
 		, "Microsoft.PowerShell.ConsoleGuiTools"
 		, "ModuleBuilder"
+		, "MSAL.PS" # https://github.com/AzureAD/MSAL.PS
 		, "MSOnline"
 		, "OnPremisesDataGatewayHAMgmt"
+		, "PnP.PowerShell" # https://github.com/pnp/powershell
 		, "posh-git"
 		, "PowerHTML"
 		, "PowerShell-Beautifier"
