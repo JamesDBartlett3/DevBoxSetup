@@ -77,6 +77,7 @@ $apps = @(
   @{name = "Microsoft.GitCredentialManagerCore" },
   @{name = "GitHub.GitLFS" },
   @{name = "JanDeDobbeleer.OhMyPosh" },
+  @{name = "ExplorerPatcher" }, # Patch Windows 11 Explorer to make Start Menu and Taskbar look like Windows 10
   # @{name = "winpython.winpython" },
   # @{name = "Canonical.Ubuntu" },
   # @{name = "beekeeper-studio.beekeeper-studio" },
