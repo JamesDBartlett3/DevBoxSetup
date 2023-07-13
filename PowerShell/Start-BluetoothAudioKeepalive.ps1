@@ -11,8 +11,14 @@ Bluetooth device's timeout length.
 
 /################################################################>
 
-Invoke-Command -ScriptBlock { 
+[CmdletBinding()]
+Param (
+    [Parameter(Mandatory = $false)][Int64]$FrequencyInHz = 21800,
+    [Parameter(Mandatory = $false)][Int64]$LengthInMs = 10800000
+)
+
+Invoke-Command -ScriptBlock {
     while($true) {
-        [console]::beep(21800, 1000); Start-Sleep 300;
-        } 
+        [console]::beep($FrequencyInHz, $LengthInMs)
     }
+}
