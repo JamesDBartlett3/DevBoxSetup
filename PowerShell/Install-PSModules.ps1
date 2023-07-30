@@ -19,14 +19,15 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 	Write-Output "Press any key to exit..."
 	$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 	exit
-} else {
+}
+else {
 	Function New-Separator {
 		[CmdletBinding()]
 		Param(
-			[Parameter(Mandatory=$false)]
+			[Parameter(Mandatory = $false)]
 			[int]$Length = $Host.UI.RawUI.WindowSize.Width
 		)
-	    Write-Host ('-' * $Length)
+		Write-Host ('-' * $Length)
 	}
 
 	# $isAdmin = (
@@ -40,7 +41,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 	# Declare list of PowerShell modules to install
 	[array]$modules = @(
 		"Az.Accounts"
-		,"Az.AnalysisServices"
+		, "Az.AnalysisServices"
 		, "Az.ApiManagement"
 		, "Az.AppConfiguration"
 		, "Az.DataFactory"
@@ -60,8 +61,9 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		# , "DataMashup" # requires -AllowPrerelease
 		, "dbatools"
 		, "dbops"
-    , "DynamicTitle"
+		, "DynamicTitle"
 		, "ExchangePowerShell"
+		, "F7History"
 		, "ImportExcel"
 		, "InvokeBuild"
 		, "Metadata"
@@ -83,7 +85,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 		, "PowerShellNotebook"
 		, "PowerShellProTools"
 		, "ps2exe"
-    , "psedit" # https://github.com/ironmansoftware/psedit
+		, "psedit" # https://github.com/ironmansoftware/psedit
 		, "PSFramework"
 		, "PSKoans"
 		, "PSReadLine"
