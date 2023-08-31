@@ -25,24 +25,43 @@ sudo apt install libssl1.1 libunwind8 -y
 
 # Detect Raspberry Pi OS kernel mode
 uname_string=$(uname -m | tail -c 3)
-kernel_mode="${uname_string/71/32}"
-echo "Detected kernel mode: ${kernel_mode}-bit"
+
+# 64-bit RPi OS kernel identifies as "aarch64" and 32-bit RPi OS kernel identifies as "armv7l", so...
+# Take the last two characters of uname_string, replace "7l" (if it exists) with "32", and then
+# assign the result (either "32" or "64") to the kernel_mode variable.
+kernel_mode="${uname_string/7l/32}"
+
+# Print detected kernel mode to the console and ask user if they wish to continue installation. If not, terminate script.
+read -p "Detected kernel mode: ${kernel_mode}-bit. Do you wish to continue with the installation? (y/n) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+	echo "PowerShell installation cancelled by user."
+	exit 1
+fi
 
 ###################################
 # Download and extract PowerShell
 
-# Query GitHub Releases API to get the download links for the latest PowerShell release
-# and find the specific file which will be compatible with the detected Raspberry Pi OS kernel mode
+# Query GitHub Releases API to get the download links for latest released version of PowerShell,
+# find the link to the specific file which will be compatible with the detected Raspberry Pi OS kernel mode, 
+# and assign that link to the latest_build variable
+echo "Querying GitHub Releases API to get the download links for latest released version of PowerShell..."
 latest_build=$(curl -sL https://api.github.com/repos/PowerShell/PowerShell/releases/latest | jq -r ".assets[].browser_download_url" | grep "linux-arm${kernel_mode}.tar.gz")
 
 # Download the PowerShell tar.gz file
+echo "Downloading ${latest_build} file..."
 wget $latest_build
 
 # Make a folder to extract the PowerShell tar.gz file into
+echo "Creating ~/powershell folder..."
 mkdir ~/powershell
 
-# Extract the PowerShell tar.gz file
+# Extract the PowerShell tar.gz file into the new folder
+echo "Extracting ${latest_build##*/} file into ~/powershell folder..."
 tar -xvf "./${latest_build##*/}" -C ~/powershell
 
 # Use freshly installed PowerShell to create a symbolic link back to itself in /usr/bin, so user can run 'pwsh' from anywhere
+echo "Creating symbolic link to PowerShell in /usr/bin..."
 sudo ~/powershell/pwsh -command 'New-Item -ItemType SymbolicLink -Path "/usr/bin/pwsh" -Target "$PSHOME/pwsh" -Force'
+echo $'Symbolic link created. You can now run "pwsh" to start PowerShell anywhere on this system.\nPowerShell installation complete! 😊'
