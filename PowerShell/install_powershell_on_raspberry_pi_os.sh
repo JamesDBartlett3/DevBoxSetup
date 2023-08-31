@@ -6,7 +6,7 @@
 
 # Notes: 
 # This is based on a PR I submitted (https://github.com/MicrosoftDocs/PowerShell-Docs/pull/10378) to the official Microsoft docs
-#	for installing PowerShell on Raspberry Pi OS (https://learn.microsoft.com/en-us/powershell/scripting/install/install-raspbian),
+# for installing PowerShell on Raspberry Pi OS (https://learn.microsoft.com/en-us/powershell/scripting/install/install-raspbian),
 # after discovering that those instructions did NOT work on my Raspberry Pi 4 running Raspberry Pi OS 64-bit. Sadly, my PR was 
 # rejected in order to "keep it simple." Silly me for thinking that broken code is the exact opposite of "simple." I have run this 
 # script successfully on a Raspberry Pi 4 Model B running Raspberry Pi OS in 64-bit kernel mode, and it should also work in 32-bit 
