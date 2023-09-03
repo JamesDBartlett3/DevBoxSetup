@@ -94,6 +94,7 @@ else {
 		, "PSScriptTools"
 		, "ReportingServicesTools"
 		, "SqlServer"
+		, "ugit" # https://github.com/StartAutomating/ugit
 	)
 	
 	# Set InstallationPolicy for PSGallery repository to Trusted
