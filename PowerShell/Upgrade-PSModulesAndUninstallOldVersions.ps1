@@ -11,6 +11,8 @@ pwsh -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.We
 
 Author: @JamesDBartlett3@techhub.social
 
+TODO: Refactor using this example: https://github.com/itpro-tips/PowerShell-Toolbox/blob/master/Update-AllPowerShellModules.ps1
+
 /################################################################>
 
 #Requires -Modules PSScriptTools
