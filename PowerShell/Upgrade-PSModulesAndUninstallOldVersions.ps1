@@ -65,8 +65,6 @@ foreach ($m in $mods) {
     $latestVersion = $installedVersions[-1].Version
     Write-Host "Latest version of '$name' module (version $latestVersion) is now installed." `
       -ForegroundColor Green -BackgroundColor Black
-    Write-Host "Uninstalling older version(s) of '$name' module..." `
-      -ForegroundColor Yellow -BackgroundColor Black
 
     # Uninstall each old version
     foreach ($v in $oldVersions) {
