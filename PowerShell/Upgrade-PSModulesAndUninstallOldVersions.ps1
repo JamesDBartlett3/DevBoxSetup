@@ -71,7 +71,7 @@ foreach ($m in $mods) {
 
       $name = $v.Name
       $version = $v.Version
-      Write-Host "Uninstalling outdated '$name' module (version $version)..." `
+      Write-Host "Uninstalling outdated version of '$name' module (version $version)..." `
         -ForegroundColor Red -BackgroundColor Black
       Uninstall-Module $v -Force
 
