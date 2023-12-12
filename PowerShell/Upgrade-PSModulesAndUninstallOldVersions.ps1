@@ -17,6 +17,7 @@ TODO: Refactor using this example: https://github.com/itpro-tips/PowerShell-Tool
 
 #Requires -Modules PSScriptTools
 
+# Set DNS refresh timeout to 0 to prevent DNS caching issues
 [System.Net.ServicePointManager]::DnsRefreshTimeout = 0
 
 Function Add-Separator {
@@ -62,7 +63,7 @@ foreach ($m in $mods) {
     $oldVersionsCount = $installedVersions.Count - 1
     $oldVersions = $installedVersions | Select-Object -First $oldVersionsCount
     $latestVersion = $installedVersions[-1].Version
-    Write-Host "Latest '$name' module (version $latestVersion) is now installed." `
+    Write-Host "Latest version of '$name' module (version $latestVersion) is now installed." `
       -ForegroundColor Green -BackgroundColor Black
     Write-Host "Uninstalling older version(s) of '$name' module..." `
       -ForegroundColor Yellow -BackgroundColor Black
