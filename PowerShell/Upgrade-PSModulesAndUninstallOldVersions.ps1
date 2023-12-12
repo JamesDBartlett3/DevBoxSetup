@@ -49,7 +49,6 @@ foreach ($m in $mods) {
     Write-Host "Updating '$name' module..." `
       -ForegroundColor Yellow -BackgroundColor Black
     Update-Module -Name $name -AcceptLicense
-
   }
 
   # Get list of all currently installed versions of the module, sorted by Published Date
@@ -57,7 +56,7 @@ foreach ($m in $mods) {
     Sort-Object -Property PublishedDate
 
   # If more than one version is installed...
-  if ($installedVersions.Count -gt 1) {
+  if ($installedVersions.Count -gt 1) { #TODO: This condition most likely never returns false, so it is probably unnecessary
 
     # Get total number of versions installed and the version number of the latest version
     $oldVersionsCount = $installedVersions.Count - 1
