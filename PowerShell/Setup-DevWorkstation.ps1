@@ -110,7 +110,7 @@ Foreach ($app in $apps) {
       winget install --exact --silent $app.name
     }
   } else {
-    Write-Host "Skipping Install of " $app.name
+    Write-Host "Skipping Install of" $app.name
   }
 }
 
