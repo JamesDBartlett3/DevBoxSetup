@@ -29,15 +29,15 @@ else {
     )
     Write-Host ('-' * $Length)
   }
-
+  
   # $isAdmin = (
   # 	[Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
   # 	).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
-
+  
   # if (!$isAdmin){
   # 	$a = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$PSCommandPath`""
   # 	Start-Process pwsh.exe $a -Verb RunAs; exit}
-
+  
   # Declare list of PowerShell modules to install
   [array]$modules = @(
     "Az.Accounts"
@@ -100,17 +100,17 @@ else {
   
   # Set InstallationPolicy for PSGallery repository to Trusted
   Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-
+  
   # Loop through $modules object and install each module
   foreach ($module in $modules) {
     New-Separator
     Write-Output "Installing module: '$module'..."
     Install-Module -Name $module -Scope CurrentUser -Repository PSGallery -AllowClobber -AcceptLicense
   }
-
+  
   New-Separator
-
+  
   # Update local help cache
   Update-Help -ErrorAction SilentlyContinue
-
+  
 }
