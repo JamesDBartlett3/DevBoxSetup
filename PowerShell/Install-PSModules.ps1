@@ -64,6 +64,7 @@ else {
 		, "DynamicTitle"
 		, "ExchangePowerShell"
 		, "F7History"
+		, "Fabtools" # https://github.com/Jojobit/Fabtools
 		, "ImportExcel"
 		, "InvokeBuild"
 		, "Metadata"
