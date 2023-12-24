@@ -62,7 +62,7 @@ $apps = @(
   @{name = "Microsoft.WindowsTerminal" },
   @{name = "Microsoft.AzureStorageExplorer" },
   @{name = "Microsoft.PowerToys" },
-  @{name = "Microsoft.PowerBI" },
+  @{name = "Microsoft.PowerBIReportBuilder" },
   @{name = "Git.Git" },
   @{name = "Microsoft.DotNet.Runtime.7" },
   @{name = "Microsoft.DotNet.DesktopRuntime.7" },
@@ -90,12 +90,12 @@ $apps = @(
   @{name = "Microsoft.AzureStorageEmulator" },
   @{name = "7zip.7zip" },
   # @{name = "voidtools.Everything" },
-  @{name = "Sysinternals Suite"; source = "msstore"},
-  @{name = "Microsoft PowerToys"; source = "msstore"}, # PowerToys
+  @{name = "Sysinternals Suite"; source = "msstore" },
+  @{name = "Microsoft PowerToys"; source = "msstore" }, # PowerToys
   @{name = "Microsoft.Sysinternals" }
   @{name = "WinFsp.WinFsp" },
   @{name = "SSHFS-Win.SSHFS-Win" },
-  @{name = "Protecc"; source = "msstore"}
+  @{name = "Protecc"; source = "msstore" }
 )
 
 winget list --accept-source-agreements | Out-Null;
@@ -118,8 +118,7 @@ Foreach ($app in $apps) {
 Write-Output "Removing Bloatware Apps..."
 
 $bloatware = "*3DPrint*", "Microsoft.MixedReality.Portal", "*Xbox*", "Microsoft.Getstarted*"
-Foreach ($app in $bloatware)
-{
+Foreach ($app in $bloatware) {
   Write-Host "Uninstalling:" $app
   Get-AppxPackage -allusers $app | Remove-AppxPackage
 }
