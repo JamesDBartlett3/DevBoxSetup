@@ -17,9 +17,24 @@ Set-PSReadLineOption -ShowToolTips
 ## Gives completions/suggestions from historical commands
 Set-PSReadLineOption -PredictionSource History
 
+# Import the Chocolatey Profile that contains the necessary code to enable
+# tab-completions to function for `choco`.
+# Be aware that if you are missing these lines from your profile, tab completion
+# for `choco` will not function.
+# See https://ch0.co/tab-completion for details.
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}
 
 # PowerShell Prompt Mods & Themes
 ## Enable git repo status awareness with Posh-Git
 Import-Module posh-git
 ## Enable PowerShell prompt theming with Oh-My-Posh
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\froczh.omp.json" | Invoke-Expression
+
+# Enable 'sudo' command in PowerShell
+Import-Module 'gsudoModule'
+
+# Enable WinGetCommandNotFound feature (from Microsoft PowerToys)
+Import-Module "C:\Program Files\PowerToys\WinUI3Apps\..\WinGetCommandNotFound.psd1"
