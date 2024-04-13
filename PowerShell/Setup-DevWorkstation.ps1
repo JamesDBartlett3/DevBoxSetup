@@ -90,6 +90,7 @@ $apps = @(
   @{name = "Microsoft.AzureStorageEmulator" },
   @{name = "7zip.7zip" },
   # @{name = "voidtools.Everything" },
+  @{name = "lin-ycv.EverythingPowerToys" },
   @{name = "Sysinternals Suite"; source = "msstore" },
   @{name = "Microsoft PowerToys"; source = "msstore" }, # PowerToys
   @{name = "Microsoft.Sysinternals" }
@@ -102,15 +103,15 @@ winget list --accept-source-agreements | Out-Null;
 Foreach ($app in $apps) {
   $listApp = winget list --exact -q $app.name
   if (![String]::Join("", $listApp).Contains($app.name)) {
-    Write-Host "Installing:" $app.name
-    if ($null -ne $app.source) {
-      winget install --exact --silent $app.name --source $app.source
-    }
-    else {
-      winget install --exact --silent $app.name
-    }
+  Write-Host "Installing:" $app.name
+  if ($null -ne $app.source) {
+    winget install --exact --silent $app.name --source $app.source --accept-package-agreements
+  }
+  else {
+    winget install --exact --silent $app.name --accept-package-agreements
+  }
   } else {
-    Write-Host "Skipping Install of" $app.name
+  Write-Host "Skipping Install of" $app.name
   }
 }
 
