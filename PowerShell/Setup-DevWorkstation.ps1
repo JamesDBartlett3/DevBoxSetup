@@ -42,10 +42,10 @@ $settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb
 $settingsJson =
 @"
   {
-    // For documentation on these settings, see: https://aka.ms/winget-settings
-    "experimentalFeatures": {
-      "experimentalMSStore": true,
-    }
+  // For documentation on these settings, see: https://aka.ms/winget-settings
+  "experimentalFeatures": {
+    "experimentalMSStore": true,
+  }
   }
 "@
 $settingsJson | Out-File $settingsPath -Encoding utf8
@@ -96,6 +96,12 @@ $apps = @(
   @{name = "Microsoft.Sysinternals" }
   @{name = "WinFsp.WinFsp" },
   @{name = "SSHFS-Win.SSHFS-Win" },
+  @{name = "evsar3.sshfs-win-manager" },
+  @{name = "CLechasseur.PathCopyCopy" },
+  @{name = "mRemoteNG.mRemoteNG" },
+  @{name = "filips.FirefoxPWA" },
+  @{name = "DisplayLink.GraphicsDriver" },
+  @{name = "Olivia.VIA" },
   @{name = "Protecc"; source = "msstore" }
 )
 
