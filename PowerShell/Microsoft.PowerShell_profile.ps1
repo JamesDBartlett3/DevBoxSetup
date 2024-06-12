@@ -24,7 +24,7 @@ Set-PSReadLineOption -PredictionSource History
 # See https://ch0.co/tab-completion for details.
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
-  Import-Module "$ChocolateyProfile"
+	Import-Module "$ChocolateyProfile"
 }
 
 # PowerShell Prompt Mods & Themes
@@ -38,3 +38,12 @@ Import-Module 'gsudoModule'
 
 # Enable WinGetCommandNotFound feature (from Microsoft PowerToys)
 Import-Module "C:\Program Files\PowerToys\WinUI3Apps\..\WinGetCommandNotFound.psd1"
+
+# Define a function to update all packages installed via Scoop, Chocolatey, and WinGet
+function Update-AllPackages {
+	sudo {
+		choco upgrade all --yes --limit-output;
+		winget upgrade --all --accept-package-agreements;
+	}
+	scoop update *
+}
