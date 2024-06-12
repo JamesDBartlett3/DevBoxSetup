@@ -37,8 +37,17 @@ oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\froczh.omp.json" | Invoke-E
 Import-Module 'gsudoModule'
 
 # Enable WinGetCommandNotFound feature (from Microsoft PowerToys)
-$CommandNotFoundModulePath = (Get-ChildItem -Path ~\Documents\PowerShell\Modules\Microsoft.WinGet.CommandNotFound -Filter *.psd1 -Recurse)[-1].FullName
-Import-Module $CommandNotFoundModulePath
+try {
+	Import-Module Microsoft.WinGet.CommandNotFound -ErrorAction SilentlyContinue
+}
+catch {
+	$CommandNotFoundModuleFolder = "~\Documents\PowerShell\Modules\Microsoft.WinGet.CommandNotFound"
+	if (Test-Path $CommandNotFoundModuleFolder) {
+		# Find the latest installed version of the CommandNotFound module
+		$CommandNotFoundModule = (Get-ChildItem -Path $CommandNotFoundModuleFolder -Filter *.psd1 -Recurse)[-1].FullName
+		Import-Module $CommandNotFoundModule
+	}
+}
 
 # Define a function to update all packages installed via Scoop, Chocolatey, and WinGet
 function Update-AllPackages {
