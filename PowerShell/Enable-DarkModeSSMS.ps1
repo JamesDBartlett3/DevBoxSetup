@@ -1,11 +1,14 @@
-# Get current PowerShell session process name
-[string]$ps = (get-process -id $pid).ProcessName
+# Get current PowerShell executable path
+[string]$ps = (Get-Process -Id $PID).Path
+
+$IsAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
+
 
 # Check if script is running as administrator. If not, restart as administrator.
-if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
-	[Security.Principal.WindowsBuiltInRole] "Administrator")) { `
-	Start-Process $ps "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" `
-	-Verb RunAs; exit }
+if (!$IsAdmin) {
+	Start-Process "$ps" -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+	exit
+}
 
 # SSMS 2016
 # powershell -Command "(Get-Content 'C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\ManagementStudio\ssms.pkgundef') -Replace '\[\`$RootKey\`$\\Themes\\{1ded0138-47ce-435e-84ef-9ec1f439b749}\]', '//[`$RootKey`$\Themes\{1ded0138-47ce-435e-84ef-9ec1f439b749}]' | Out-File 'C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\ManagementStudio\ssms.pkgundef'"
