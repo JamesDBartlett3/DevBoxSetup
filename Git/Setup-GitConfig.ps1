@@ -6,7 +6,7 @@ if (-not $IsAdmin) {
 	$restart = Read-Host "Some settings require administrator privileges to apply. Restart as administrator? (y/n)"
 	if ($restart -ieq "y") {
 		# Restart as admin using the same version of PowerShell that is currently running.
-		$PSExePath = (Get-Process -Id $PID).path
+		$PSExePath = (Get-Process -Id $PID).Path
 		Start-Process "$PSExePath" -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
 	}
 	exit
