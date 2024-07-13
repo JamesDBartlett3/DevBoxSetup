@@ -39,3 +39,34 @@ if($reboot -eq "Y") {
 } else {
   Write-Host "Reboot later to complete the process."
 }
+
+# Optionally disable the WLMS service to prevent automatic shutdown every hour
+$disableWLMS = Read-Host "Would you like to disable the WLMS service to prevent automatic shutdown every hour? (Y/N)"
+if($disableWLMS.ToUpper() -eq "Y") {
+	
+	# Check if PsExec is installed. If not, download and extract it.
+	$psexecPath = (Get-Command psexec -ErrorAction SilentlyContinue).Source
+	if(!$psexecPath) {
+		Invoke-WebRequest "https://download.sysinternals.com/files/PSTools.zip" -OutFile "$env:TEMP\PSTools.zip"
+		Expand-Archive -Path "$env:TEMP\PSTools.zip" -DestinationPath "$env:TEMP\PSTools"
+		$psexecPath = "$env:TEMP\PSTools\PsExec.exe"
+	}
+	
+	# Disable WLMS service
+	Invoke-Expression -Command "$psexecPath -i -s $ps -c 'Set-Service -Name wlms -StartupType Disabled'"
+	
+	# Ask the user to reboot to complete the process
+	$reboot = Read-Host "Reboot is required to complete the process. Would you like to reboot now? (Y/N)"
+	if($reboot.ToUpper() -eq "Y") {
+		Write-Host "Rebooting in 5 seconds..."
+		Start-Sleep -Seconds 5
+		Restart-Computer -Force
+	} else {
+		Write-Host "Reboot later to complete the process."
+	}
+	
+} else {
+	Write-Host "WLMS service has not been disabled."
+}
+
+
