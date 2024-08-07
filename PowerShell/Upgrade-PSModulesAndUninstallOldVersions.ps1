@@ -30,8 +30,7 @@ Function Add-Separator {
 
 Add-Separator
 
-Write-Host "Checking installed modules for available updates and/or old version(s) to uninstall..." `
-  -ForegroundColor Blue -BackgroundColor Black
+Write-Host "Checking installed modules for available updates and/or old version(s) to uninstall..." -ForegroundColor Blue
 
 Add-Separator
 
@@ -46,41 +45,37 @@ foreach ($m in $mods) {
   
   # If the module has an update available, install it
   if ($m.UpdateNeeded) {
-  Write-Host "Updating '$name' module..." `
-    -ForegroundColor Yellow -BackgroundColor Black
-  Update-Module -Name $name -AcceptLicense
+    Write-Host "Updating '$name' module..." -ForegroundColor Yellow
+    Update-Module -Name $name -AcceptLicense
   }
   
   # Get list of all currently installed versions of the module, sorted by Published Date
   $installedVersions = Get-InstalledModule -Name $name -AllVersions |
-  Sort-Object -Property PublishedDate
+    Sort-Object -Property PublishedDate
   
   # If more than one version is installed...
-  if ($installedVersions.Count -gt 1) { #TODO: This condition most likely never returns false, so it is probably unnecessary
+  if ($installedVersions.Count -gt 1) {
   
-  # Get total number of versions installed and the version number of the latest version
-  $oldVersionsCount = $installedVersions.Count - 1
-  $oldVersions = $installedVersions | Select-Object -First $oldVersionsCount
-  $latestVersion = $installedVersions[-1].Version
-  Write-Host "Latest version of '$name' module (version $latestVersion) is now installed." `
-    -ForegroundColor Green -BackgroundColor Black
-  
-  # Uninstall each old version
-  foreach ($v in $oldVersions) {
-  
-    $name = $v.Name
-    $version = $v.Version
-    Write-Host "Uninstalling outdated version of '$name' module (version $version)..." `
-      -ForegroundColor Yellow	-BackgroundColor Black
-    Uninstall-Module $v -Force
-  
-  }
-  
-  Add-Separator
+    # Get total number of versions installed and the version number of the latest version
+    $oldVersionsCount = $installedVersions.Count - 1
+    $oldVersions = $installedVersions | Select-Object -First $oldVersionsCount
+    $latestVersion = $installedVersions[-1].Version
+    Write-Host "Latest version of '$name' module (version $latestVersion) is now installed." -ForegroundColor Green
+    
+    # Uninstall each old version
+    foreach ($v in $oldVersions) {
+    
+      $name = $v.Name
+      $version = $v.Version
+      Write-Host "Uninstalling outdated version of '$name' module (version $version)..." -ForegroundColor Yellow
+      Uninstall-Module $v -Force
+    
+    }
+    
+    Add-Separator
   
   }
   
 }
 
-Write-Host "Finished updating modules and uninstalling old versions." `
-  -ForegroundColor Blue -BackgroundColor Black
+Write-Host "Finished updating modules and uninstalling old versions." -ForegroundColor Blue
