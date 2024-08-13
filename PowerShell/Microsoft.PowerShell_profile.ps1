@@ -16,6 +16,8 @@ Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 Set-PSReadLineOption -ShowToolTips
 ## Gives completions/suggestions from historical commands
 Set-PSReadLineOption -PredictionSource History
+## Enable Ctrl+Space to trigger MenuComplete completion
+Set-PSReadLineKeyHandler -Function MenuComplete -Chord 'Ctrl+@'
 
 # Import the Chocolatey Profile that contains the necessary code to enable
 # tab-completions to function for `choco`.
