@@ -7,6 +7,7 @@ PowerShell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.
 
 Author: @JamesDBartlett3@techhub.social
 
+TODO: Refactor with [AnyPackage](https://www.anypackage.dev/) to install packages
 TODO: Handle admin
 TODO: Add call to Install-PSModules.ps1
 TODO: Let user choose apps to install from an Out-ConsoleGridView list

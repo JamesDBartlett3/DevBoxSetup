@@ -9,6 +9,8 @@ pwsh -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.We
 
 Author: @JamesDBartlett3 (https://techhub.social/@JamesDBartlett3)
 
+TODO: Refactor with [AnyPackage](https://www.anypackage.dev/) to install packages
+
 /################################################################>
 
 # Override locally cached copy of this script in case changes have been made since last run
