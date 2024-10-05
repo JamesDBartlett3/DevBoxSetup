@@ -69,6 +69,7 @@ else {
     , "Fabtools" # https://github.com/Jojobit/Fabtools
     , "ImportExcel"
     , "InvokeBuild"
+    , "Invoke-DQVTesting" # https://www.powershellgallery.com/packages/Invoke-DQVTesting
     , "Metadata"
     , "MicrosoftPowerBIMgmt"
     , "MicrosoftTeams"
