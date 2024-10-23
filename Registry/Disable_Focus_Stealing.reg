@@ -1,0 +1,9 @@
+; Disable Focus Stealing in Windows using the ForegroundLockTimeout registry key
+; This is a DWORD value that sets the time in milliseconds that a window must be 
+; in the foreground before it can steal focus from other windows.
+; The default value is 0x00030D40 (200000 milliseconds or 200 seconds).
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Control Panel\Desktop]
+"ForegroundLockTimeout"=dword:00030d40
