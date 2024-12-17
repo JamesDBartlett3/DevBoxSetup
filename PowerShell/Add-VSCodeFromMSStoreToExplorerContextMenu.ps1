@@ -1,7 +1,20 @@
+# If not running as admin, restart as admin
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+	exit
+}
+
+# Get the current user's name and the path to VS Code
 $UserName = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name.Split('\')[1]
 $VSCodePath = "C:\Users\$UserName\AppData\Local\Programs\Microsoft VS Code\Code.exe"
 
-# Open files
+# Test to make sure VS Code is installed
+if (-not (Test-Path $VSCodePath)) {
+	Write-Host "VS Code is not installed at $VSCodePath. Please install it from the Microsoft Store and try again."
+	exit
+}
+
+# This will make it appear when you right click on a file
 New-Item -Path "HKCU:\Software\Classes\*\shell\Open with VS Code" -Force | Out-Null
 Set-ItemProperty -Path "HKCU:\Software\Classes\*\shell\Open with VS Code" -Name "(default)" -Value "Edit with VS Code"
 Set-ItemProperty -Path "HKCU:\Software\Classes\*\shell\Open with VS Code" -Name "Icon" -Value "$VSCodePath,0"
