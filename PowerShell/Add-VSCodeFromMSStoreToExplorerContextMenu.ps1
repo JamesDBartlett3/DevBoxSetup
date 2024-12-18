@@ -1,6 +1,8 @@
 # If not running as admin, restart as admin
 if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-	Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+	# Restart as admin using the same version of PowerShell that is currently running.
+	$PSExePath = (Get-Process -Id $PID).Path
+	Start-Process "$PSExePath" -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
 	exit
 }
 
