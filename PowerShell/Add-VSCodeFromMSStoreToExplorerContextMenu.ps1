@@ -32,7 +32,7 @@ Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\shell\vscode" -Name "(d
 Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\shell\vscode" -Name "Icon" -Value "`"$VSCodePath`",0"
 New-Item -Path "HKCU:\Software\Classes\Directory\shell\vscode\command" -Force | Out-Null
 Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\shell\vscode\command" -Name "(default)" -Value "`"$VSCodePath`" `"%1`""
-Write-Host"Done."
+Write-Host "Done."
 
 # This will make it appear when you right click INSIDE a folder
 Write-Host -NoNewline "Adding 'Open Folder as VS Code Project' to the context menu that appears when the user right-clicks INSIDE a folder..."
