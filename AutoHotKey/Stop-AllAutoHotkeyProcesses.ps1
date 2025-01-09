@@ -1,0 +1,1 @@
+Get-Process autohotkey | ForEach-Object {$_.kill()}
