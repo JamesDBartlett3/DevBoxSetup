@@ -1,1 +1,1 @@
-Get-Process autohotkey | ForEach-Object {$_.kill()}
+Get-Process -Name "AutoHotkey*" | ForEach-Object {$_.kill()}
