@@ -60,9 +60,9 @@ return
 
 MoveMouse:
 	if (A_TimeIdle > modTime) {
-		Random, rand, 1, 30
+		Random, rand, 1, 5
 		MouseMove, rand, rand, 2, R
-		MouseMove, (rand * -1), (rand * -1), 2, R
+		MouseMove, -rand, -rand, 2, R
 		SendInput {RShift}
 	}
 return
