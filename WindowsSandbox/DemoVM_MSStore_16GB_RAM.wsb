@@ -1,0 +1,13 @@
+<Configuration>
+  <MemoryInMB>16384</MemoryInMB>
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>%SystemDrive%\</HostFolder>
+      <SandboxFolder>C:\Host_SystemDrive</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+  <LogonCommand>
+    <Command>powershell -ExecutionPolicy Unrestricted -Command "$(irm 'https://raw.githubusercontent.com/JamesDBartlett3/DevBoxSetup/refs/heads/main/WindowsSandbox/WindowsSandbox_Install_MSStore_PBID_PBIRB.ps1' | iex)"</Command>
+  </LogonCommand>
+</Configuration>
