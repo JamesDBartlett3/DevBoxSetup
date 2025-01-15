@@ -1,3 +1,6 @@
+# TODO: Replace bonguides scripts with emdedded scripts that do the same thing
+# Reference: https://serverfault.com/questions/1018220/how-do-i-install-an-app-from-windows-store-using-powershell
+
 Start-Process powershell {-NoExit
 
   # Open the Downloads folder in the host system
@@ -8,7 +11,7 @@ Start-Process powershell {-NoExit
   Invoke-RestMethod 'bonguides.com/wsb/msstore' | Invoke-Expression; 
 
   # Install Power BI Desktop and Power BI Report Builder
-  if ((Read-Host 'Automatically install Power BI Report Builder and Power BI Desktop (Y/N)?').ToUpper() -eq 'Y') {
+  if ((Read-Host 'Install Power BI Report Builder and Power BI Desktop now (Y/N)?').ToUpper() -eq 'Y') {
     Invoke-RestMethod 'bonguides.com/winget' | Invoke-Expression; 
     winget search 'Power BI' --source=msstore --accept-source-agreements; 
     '9N3BL69HC2MC', '9NTXR16HNW1T' | ForEach-Object {
