@@ -1,7 +1,6 @@
 # TODO: Replace bonguides scripts with emdedded scripts that do the same thing
 # Reference: https://serverfault.com/questions/1018220/how-do-i-install-an-app-from-windows-store-using-powershell
-# Download-AppxPackage "https://www.microsoft.com/store/productId/9WZDNCRFJBMP" "C:\Support\Store"
-# Get-ChildItem C:\Support\Store\ | Add-AppxPackage
+# Download-AppxPackage "https://www.microsoft.com/store/productId/9WZDNCRFJBMP"
 
 function Download-AppxPackage {
   [CmdletBinding()]
@@ -64,19 +63,21 @@ function Download-AppxPackage {
   }
 
 # Download the Microsoft Store
-Download-AppxPackage "https://www.microsoft.com/store/productId/9WZDNCRFJBMP"
+# Currently not working: Downloads dependencies, but fails to download Microsoft Store package
+# Download-AppxPackage "https://www.microsoft.com/store/productId/9WZDNCRFJBMP"
 
 # Install the Microsoft Store
-Get-ChildItem "C:\Support\Store\" | Add-AppxPackage
+# Get-ChildItem "C:\Support\Store\" | Add-AppxPackage
 
 Start-Process powershell {-NoExit
 
   # Open the Downloads folder in the host system
+  # TODO: Replace with a more reliable method
   (Get-ChildItem 'C:\Host_SystemDrive\Users' -Directory | 
     Sort-Object -Property LastWriteTime -Descending)[0].FullName + '\Downloads' | Invoke-Item; 
 
   # Install the Microsoft Store
-  # Invoke-RestMethod 'bonguides.com/wsb/msstore' | Invoke-Expression; 
+  Invoke-RestMethod 'bonguides.com/wsb/msstore' | Invoke-Expression; 
 
   # Install Power BI Desktop and Power BI Report Builder
   if ((Read-Host 'Install Power BI Report Builder and Power BI Desktop now (Y/N)?').ToUpper() -eq 'Y') {
