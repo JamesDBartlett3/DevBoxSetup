@@ -18,6 +18,7 @@ Start-Process powershell {-NoExit
       winget install -e -i --id=$_ --source=msstore --accept-package-agreements
     }
   } else {
+    # TODO: Wait until the Microsoft Store is not running, then launch it.
     Start-Process 'ms-windows-store://browse/?type=Apps&cat=Business&subcat=Data+%26+analytics'
   }
 
