@@ -25,6 +25,7 @@ Based on this gist: https://gist.github.com/Codebytes/29bf18015f6e93fca9421df73c
 #Install WinGet
 $hasPackageManager = Get-AppPackage -name 'Microsoft.DesktopAppInstaller'
 if (!$hasPackageManager -or [version]$hasPackageManager.Version -lt [version]"1.10.0.0") {
+  # TODO: This seems janky. Find a better way to do this.
   "Installing winget Dependencies"
   Add-AppxPackage -Path 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
   $releases_url = 'https://api.github.com/repos/microsoft/winget-cli/releases/latest'
@@ -41,18 +42,20 @@ Write-Output "Configuring winget"
 #winget config path from: https://github.com/microsoft/winget-cli/blob/master/doc/Settings.md#file-location
 $settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\LocalState\settings.json"
 $settingsJson =
+# For documentation on these settings, see: https://aka.ms/winget-settings
 @"
   {
-  // For documentation on these settings, see: https://aka.ms/winget-settings
-  "experimentalFeatures": {
-    "experimentalMSStore": true,
-  }
+    "experimentalFeatures": {
+      "experimentalMSStore": true,
+    }
   }
 "@
 $settingsJson | Out-File $settingsPath -Encoding utf8
 
 #Install New apps
+# TODO: Re-evaluate which apps should be installed via WinGet
 Write-Output "Installing Apps"
+# TODO: Implement a picker for the user to choose which apps to install
 $apps = @(
   @{name = "Chocolatey.Chocolatey" },
   @{name = "Chocolatey.ChocolateyGUI" },
@@ -64,7 +67,7 @@ $apps = @(
   # @{name = "Microsoft.AzureStorageExplorer" },
   @{name = "Microsoft.PowerToys" },
   @{name = "Microsoft.PowerBIReportBuilder" },
-  @{name = "Git.Git" },
+  # @{name = "Git.Git" }, # Probably not needed, since Microsoft.Git is installed
   @{name = "Microsoft.DotNet.Runtime.7" },
   @{name = "Microsoft.DotNet.DesktopRuntime.7" },
   # @{name = "Microsoft.DotNet.Runtime.6" },
@@ -85,7 +88,7 @@ $apps = @(
   # @{name = "beekeeper-studio.beekeeper-studio" },
   @{name = "gerardog.gsudo" },
   # @{name = "" },
-  @{name = "Microsoft.AzureDataStudio" },
+  # @{name = "Microsoft.AzureDataStudio" }, # Azure Data Studio is deprecated. VS Code is the recommended replacement.
   @{name = "Microsoft.AzureDataCLI" },
   @{name = "Microsoft.AzureFunctionsCoreTools" },
   @{name = "Microsoft.AzureStorageEmulator" },
@@ -98,31 +101,32 @@ $apps = @(
   @{name = "WinFsp.WinFsp" },
   @{name = "SSHFS-Win.SSHFS-Win" },
   @{name = "evsar3.sshfs-win-manager" },
-  @{name = "CLechasseur.PathCopyCopy" },
+  # @{name = "CLechasseur.PathCopyCopy" },
   @{name = "mRemoteNG.mRemoteNG" },
   @{name = "filips.FirefoxPWA" },
   @{name = "DisplayLink.GraphicsDriver" },
-  @{name = "Olivia.VIA" },
-  @{name = "Protecc"; source = "msstore" }
+  @{name = "Olivia.VIA" }
+  # @{name = "Protecc"; source = "msstore" }
 )
 
 winget list --accept-source-agreements | Out-Null;
 Foreach ($app in $apps) {
   $listApp = winget list --exact -q $app.name
   if (![String]::Join("", $listApp).Contains($app.name)) {
-  Write-Host "Installing:" $app.name
-  if ($null -ne $app.source) {
-    winget install --exact --silent $app.name --source $app.source --accept-package-agreements
-  }
-  else {
-    winget install --exact --silent $app.name --accept-package-agreements
-  }
+    Write-Host "Installing:" $app.name
+    if ($null -ne $app.source) {
+      winget install --exact --silent $app.name --source $app.source --accept-package-agreements
+    }
+    else {
+      winget install --exact --silent $app.name --accept-package-agreements
+    }
   } else {
-  Write-Host "Skipping Install of" $app.name
+    Write-Host "Skipping Install of" $app.name
   }
 }
 
 #Remove Apps
+# TODO: Implement a picker for the user to choose which apps to remove
 Write-Output "Removing Bloatware Apps..."
 
 $bloatware = "*3DPrint*", "Microsoft.MixedReality.Portal", "*Xbox*", "Microsoft.Getstarted*"
@@ -132,10 +136,12 @@ Foreach ($app in $bloatware) {
 }
 
 # Install Chocolatey
+# TODO: Re-evaluate which apps should be installed via Chocolatey
 # apps: dotnet, dotnet-sdk, dotnetcore, dotnetcore-sdk
 
 # Install Scoop
-# apps: busybox, oh-my-posh, onecommander, winfetch
+# TODO: Re-evaluate which apps should be installed via Scoop
+# apps: busybox, oh-my-posh, onecommander, winfetch, uutils-coreutils
 
 #Perform System Tweaks
 Write-Host "Symlinking `e[38;2;0;255;0mMicrosoft.VSCode_profile.ps1`e[0m -> `e[38;2;0;255;0mMicrosoft.PowerShell_profile.ps1`e[0m..."
