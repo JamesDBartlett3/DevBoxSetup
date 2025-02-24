@@ -26,7 +26,7 @@ Set-PSReadLineKeyHandler -Function MenuComplete -Chord 'Ctrl+@'
 # See https://ch0.co/tab-completion for details.
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
-	Import-Module "$ChocolateyProfile"
+  Import-Module "$ChocolateyProfile"
 }
 
 # PowerShell Prompt Mods & Themes
@@ -40,23 +40,23 @@ Import-Module 'gsudoModule'
 
 # Enable WinGetCommandNotFound feature (from Microsoft PowerToys)
 try {
-	Import-Module Microsoft.WinGet.CommandNotFound -ErrorAction SilentlyContinue
+  Import-Module Microsoft.WinGet.CommandNotFound -ErrorAction SilentlyContinue
 }
 catch {
-	$CommandNotFoundModuleFolder = "~\Documents\PowerShell\Modules\Microsoft.WinGet.CommandNotFound"
-	if (Test-Path $CommandNotFoundModuleFolder) {
-		# Find the latest installed version of the CommandNotFound module
-		$CommandNotFoundModule = (Get-ChildItem -Path $CommandNotFoundModuleFolder -Filter *.psd1 -Recurse)[-1].FullName
-		Import-Module $CommandNotFoundModule
-	}
+  $CommandNotFoundModuleFolder = "~\Documents\PowerShell\Modules\Microsoft.WinGet.CommandNotFound"
+  if (Test-Path $CommandNotFoundModuleFolder) {
+    # Find the latest installed version of the CommandNotFound module
+    $CommandNotFoundModule = (Get-ChildItem -Path $CommandNotFoundModuleFolder -Filter *.psd1 -Recurse)[-1].FullName
+    Import-Module $CommandNotFoundModule
+  }
 }
 
 # Define a function to update all packages installed via Scoop, Chocolatey, and WinGet
 function Update-AllPackages {
-	sudo {
-		choco upgrade all --yes --limit-output;
-		winget upgrade --all --accept-package-agreements;
-	}
-	scoop update *
+  gsudo {
+    choco upgrade all --yes --limit-output;
+    winget upgrade --all --accept-package-agreements;
+  }
+  scoop update *
 }
 New-Alias -Name "Upgrade-AllPackages" -Value Update-AllPackages
