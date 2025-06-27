@@ -34,9 +34,8 @@ Write-Host "Checking installed modules for available updates and/or old version(
 
 Add-Separator
 
-# Get all installed modules for which an update is available
-$mods = Get-InstalledModule | Compare-Module |
-  Where-Object {$_.InstalledVersion -ne $_.OnlineVersion}
+# Get all installed modules
+$mods = Get-InstalledModule | Compare-Module
 
 # For each module
 foreach ($m in $mods) {
@@ -65,7 +64,6 @@ foreach ($m in $mods) {
     # Uninstall each old version
     foreach ($v in $oldVersions) {
     
-      $name = $v.Name
       $version = $v.Version
       Write-Host "Uninstalling outdated version of '$name' module (version $version)..." -ForegroundColor Yellow
       Uninstall-Module $v -Force
