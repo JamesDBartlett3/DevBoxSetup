@@ -6,6 +6,35 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 	exit
 }
 
+# Animation function for progress indicators
+function Show-AnimatedProgress {
+  param([string]$Message, [scriptblock]$Action)
+  
+  $spinnerChars = @('|', '/', '-', '\')
+  $spinnerIndex = 0
+  
+  # Start background job to run the action
+  $job = Start-Job -ScriptBlock $Action
+  
+  Write-Host -NoNewline "$Message "
+  
+  # Animate spinner while job is running
+  while ($job.State -eq 'Running') {
+    Write-Host -NoNewline "`r$Message $($spinnerChars[$spinnerIndex]) " -ForegroundColor Cyan
+    $spinnerIndex = ($spinnerIndex + 1) % $spinnerChars.Length
+    Start-Sleep -Milliseconds 150
+  }
+  
+  # Wait for job to complete and get any output
+  $result = Receive-Job -Job $job -Wait
+  Remove-Job -Job $job
+  
+  # Clear spinner and show completion
+  Write-Host "`r$Message ✓ " -ForegroundColor Green
+  
+  return $result
+}
+
 # Get the current user's name and the path to VS Code
 $UserName = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name.Split('\')[1]
 $VSCodePath = "C:\Users\$UserName\AppData\Local\Programs\Microsoft VS Code\Code.exe"
@@ -17,28 +46,28 @@ if (-not (Test-Path $VSCodePath)) {
 }
 
 # This will make it appear when you right click on a file
-Write-Host -NoNewline "Adding 'Open with VS Code' to the context menu for files... "
-New-Item -Path "HKCU:\Software\Classes\*\shell\Open with VS Code" -Force | Out-Null
-Set-ItemProperty -Path "HKCU:\Software\Classes\*\shell\Open with VS Code" -Name "(default)" -Value "Edit with VS Code"
-Set-ItemProperty -Path "HKCU:\Software\Classes\*\shell\Open with VS Code" -Name "Icon" -Value "$VSCodePath,0"
-New-Item -Path "HKCU:\Software\Classes\*\shell\Open with VS Code\command" -Force | Out-Null
-Set-ItemProperty -Path "HKCU:\Software\Classes\*\shell\Open with VS Code\command" -Name "(default)" -Value "`"$VSCodePath`" `"%1`""
-Write-Host "Done."
+Show-AnimatedProgress "Adding 'Open with VS Code' to the context menu for files" {
+  New-Item -Path "HKCU:\Software\Classes\`*\shell\Open with VS Code" -Force | Out-Null
+  Set-ItemProperty -Path "HKCU:\Software\Classes\`*\shell\Open with VS Code" -Name "(default)" -Value "Edit with VS Code"
+  Set-ItemProperty -Path "HKCU:\Software\Classes\`*\shell\Open with VS Code" -Name "Icon" -Value "$using:VSCodePath,0"
+  New-Item -Path "HKCU:\Software\Classes\`*\shell\Open with VS Code\command" -Force | Out-Null
+  Set-ItemProperty -Path "HKCU:\Software\Classes\`*\shell\Open with VS Code\command" -Name "(default)" -Value "`"$using:VSCodePath`" `"%1`""
+}
 
 # This will make it appear when you right click ON a folder
-Write-Host -NoNewline "Adding 'Open Folder as VS Code Project' to the context menu that appears when the user right-clicks ON a folder... "
-New-Item -Path "HKCU:\Software\Classes\Directory\shell\vscode" -Force | Out-Null
-Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\shell\vscode" -Name "(default)" -Value "Open Folder as VS Code Project"
-Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\shell\vscode" -Name "Icon" -Value "`"$VSCodePath`",0"
-New-Item -Path "HKCU:\Software\Classes\Directory\shell\vscode\command" -Force | Out-Null
-Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\shell\vscode\command" -Name "(default)" -Value "`"$VSCodePath`" `"%1`""
-Write-Host "Done."
+Show-AnimatedProgress "Adding 'Open Folder as VS Code Project' to folder context menu" {
+  New-Item -Path "HKCU:\Software\Classes\Directory\shell\vscode" -Force | Out-Null
+  Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\shell\vscode" -Name "(default)" -Value "Open Folder as VS Code Project"
+  Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\shell\vscode" -Name "Icon" -Value "`"$using:VSCodePath`",0"
+  New-Item -Path "HKCU:\Software\Classes\Directory\shell\vscode\command" -Force | Out-Null
+  Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\shell\vscode\command" -Name "(default)" -Value "`"$using:VSCodePath`" `"%1`""
+}
 
 # This will make it appear when you right click INSIDE a folder
-Write-Host -NoNewline "Adding 'Open Folder as VS Code Project' to the context menu that appears when the user right-clicks INSIDE a folder... "
-New-Item -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode" -Force | Out-Null
-Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode" -Name "(default)" -Value "Open Folder as VS Code Project"
-Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode" -Name "Icon" -Value "`"$VSCodePath`",0"
-New-Item -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode\command" -Force | Out-Null
-Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode\command" -Name "(default)" -Value "`"$VSCodePath`" `"%V`""
-Write-Host "Done."
+Show-AnimatedProgress "Adding 'Open Folder as VS Code Project' to folder background context menu" {
+  New-Item -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode" -Force | Out-Null
+  Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode" -Name "(default)" -Value "Open Folder as VS Code Project"
+  Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode" -Name "Icon" -Value "`"$using:VSCodePath`",0"
+  New-Item -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode\command" -Force | Out-Null
+  Set-ItemProperty -Path "HKCU:\Software\Classes\Directory\Background\shell\vscode\command" -Name "(default)" -Value "`"$using:VSCodePath`" `"%V`""
+}
