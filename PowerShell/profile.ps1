@@ -12,6 +12,7 @@ Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
 ## During auto completion, pressing arrow key up or down will move the cursor to the end of the completion
 Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+Set-PSReadLineOption -PredictionViewStyle ListView
 ## Shows tooltip during completion
 Set-PSReadLineOption -ShowToolTips
 ## Gives completions/suggestions from historical commands
