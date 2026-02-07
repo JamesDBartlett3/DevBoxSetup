@@ -76,6 +76,8 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     if ($All) { $argList += " -All" }
     if ($RemoveExisting) { $argList += " -RemoveExisting" }
     if ($Force) { $argList += " -Force" }
+    if ($WhatIfPreference) { $argList += " -WhatIf" }
+    if ($VerbosePreference -eq 'Continue') { $argList += " -Verbose" }
     
     # Restart as admin using the same version of PowerShell that is currently running.
     $PSExePath = (Get-Process -Id $PID).Path
@@ -137,7 +139,8 @@ function Get-ExistingContextMenuEntries {
   
   # Check file context menu entries
   # Match keys containing 'code' or 'vscode' (case-insensitive by default)
-  $fileKeys = Get-ChildItem -Path "HKCU:\Software\Classes\*\shell" -ErrorAction SilentlyContinue | 
+  # Use -LiteralPath because * is an actual registry key name, not a wildcard
+  $fileKeys = Get-ChildItem -LiteralPath "HKCU:\Software\Classes\*\shell" -ErrorAction SilentlyContinue | 
     Where-Object { $_.PSChildName -match 'vscode|vs\s*code' }
   
   foreach ($key in $fileKeys) {
@@ -190,7 +193,7 @@ function Get-ExistingContextMenuEntries {
     }
   }
   
-  return $existingEntries
+  return ,$existingEntries
 }
 
 # Function to find all VS Code installations
@@ -254,7 +257,7 @@ function Find-AllVSCodeInstallations {
     }
   }
   
-  return $foundInstallations
+  return ,$foundInstallations
 }
 
 # Check for existing context menu entries
@@ -460,13 +463,14 @@ foreach ($installation in $selectedInstallations) {
   }
   
   # This will make it appear when you right click on a file
+  # Use -LiteralPath because * is an actual registry key name, not a wildcard
   $result1 = Show-AnimatedProgress "Adding 'Open with $menuLabel' to file context menu" {
     try {
-      New-Item -Path "HKCU:\Software\Classes\`*\shell\Open with $using:regKey" -Force -ErrorAction Stop | Out-Null
-      Set-ItemProperty -Path "HKCU:\Software\Classes\`*\shell\Open with $using:regKey" -Name "(default)" -Value "Edit with $using:menuLabel" -ErrorAction Stop
-      Set-ItemProperty -Path "HKCU:\Software\Classes\`*\shell\Open with $using:regKey" -Name "Icon" -Value "`"$using:vsPath`",0" -ErrorAction Stop
-      New-Item -Path "HKCU:\Software\Classes\`*\shell\Open with $using:regKey\command" -Force -ErrorAction Stop | Out-Null
-      Set-ItemProperty -Path "HKCU:\Software\Classes\`*\shell\Open with $using:regKey\command" -Name "(default)" -Value "`"$using:vsPath`" `"%1`"" -ErrorAction Stop
+      New-Item -LiteralPath "HKCU:\Software\Classes\*\shell\$using:regKey" -Force -ErrorAction Stop | Out-Null
+      Set-ItemProperty -LiteralPath "HKCU:\Software\Classes\*\shell\$using:regKey" -Name "(default)" -Value "Edit with $using:menuLabel" -ErrorAction Stop
+      Set-ItemProperty -LiteralPath "HKCU:\Software\Classes\*\shell\$using:regKey" -Name "Icon" -Value "`"$using:vsPath`",0" -ErrorAction Stop
+      New-Item -LiteralPath "HKCU:\Software\Classes\*\shell\$using:regKey\command" -Force -ErrorAction Stop | Out-Null
+      Set-ItemProperty -LiteralPath "HKCU:\Software\Classes\*\shell\$using:regKey\command" -Name "(default)" -Value "`"$using:vsPath`" `"%1`"" -ErrorAction Stop
     } catch {
       throw "Failed to add file context menu: $_"
     }
