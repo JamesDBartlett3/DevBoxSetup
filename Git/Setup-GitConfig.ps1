@@ -28,6 +28,21 @@ git config --global core.compression 0
 git config --global core.editor "code --wait"
 git config --global fetch.prune true
 
+# Configure Scoop buckets to rebase on pull
+## When a scoop bucket maintainer rewrites history (squash, force push, rebase, etc.) in a bucket repository, it 
+## causes a merge conflict when users pull the latest changes. By setting pull.rebase to true, Git will rebase 
+## the local changes on top of the latest changes from the remote repository, avoiding the merge conflict.
+## This is especially important for the extras bucket, which is more likely to have history rewritten due to 
+## the nature of the packages it contains (e.g., community contributions, experimental packages, etc.).
+if (Test-Path "$env:USERPROFILE\scoop") {
+	if (Test-Path "$env:USERPROFILE\scoop\buckets\extras") {
+		git -C "$env:USERPROFILE\scoop\buckets\extras" config pull.rebase true
+	}
+	if (Test-Path "$env:USERPROFILE\scoop\buckets\main") {
+		git -C "$env:USERPROFILE\scoop\buckets\main" config pull.rebase true
+	}
+}
+
 # Ask user if they want to apply settings from the .gitconfig file in this directory to the global .gitconfig file
 $GitConfigFilePath = Join-Path -Path $PSScriptRoot -ChildPath ".gitconfig"
 if (Test-Path -Path $GitConfigFilePath) {
