@@ -26,28 +26,6 @@ Set-PSReadLineKeyHandler -Function MenuComplete -Chord 'Ctrl+@'
 #endregion
 
 
-# DEPRECATED: This section is no longer necessary, as UniGetUI has replaced the need for it.
-# # Import the Chocolatey Profile that contains the necessary code to enable
-# # tab-completions to function for `choco`.
-# # Be aware that if you are missing these lines from your profile, tab completion
-# # for `choco` will not function.
-# # See https://ch0.co/tab-completion for details.
-# $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-# if (Test-Path($ChocolateyProfile)) {
-#   Import-Module "$ChocolateyProfile"
-# }
-
-# DEPRECATED: This function is no longer necessary, as UniGetUI has replaced the need for it. 
-# # Define a function to update all packages installed via Scoop, Chocolatey, and WinGet
-# function Update-AllPackages {
-#   gsudo {
-#     choco upgrade all --yes --limit-output;
-#     winget upgrade --all --accept-package-agreements;
-#   }
-#   scoop update *
-# }
-# New-Alias -Name "Upgrade-AllPackages" -Value Update-AllPackages
-
 #region General
 
 ## Enable WinGetCommandNotFound feature (from Microsoft PowerToys)
@@ -73,10 +51,6 @@ function touch {
   Remove-Item Function:touch -ErrorAction SilentlyContinue
   & touch.exe @Paths
 }
-
-# DEPRECATED: This module is no longer necessary, as oh-my-posh has replaced the need for it.
-# ## Enable git repo status awareness with Posh-Git
-# Import-Module posh-git
 
 ## Enable 'sudo' command in PowerShell
 Import-Module 'gsudoModule'
