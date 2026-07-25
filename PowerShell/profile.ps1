@@ -95,3 +95,54 @@ function Write-Host {
 }
 
 #endregion
+
+
+#region Functions
+
+# Define a function to test router firmware hash
+function Test-RouterFirmwareHash {
+    param(
+        [Parameter(Mandatory)]
+        [string]$FirmwarePath
+    )
+
+    # Resolve relative paths reliably (works for nested folders too)
+    try {
+        $FirmwarePath = (Resolve-Path $FirmwarePath).Path
+    }
+    catch {
+        Write-Host "Firmware file not found: $FirmwarePath" -ForegroundColor Red
+        return
+    }
+
+    # Build the adjacent .sha256 filename
+    $directory = Split-Path $FirmwarePath
+    $shaFile   = Join-Path $directory "sha256sum.sha256"
+
+    if (-not (Test-Path $shaFile)) {
+        Write-Host "SHA256 file not found: $shaFile" -ForegroundColor Red
+        return
+    }
+
+    # Compute actual + expected hashes
+    $actual   = (Get-FileHash $FirmwarePath -Algorithm SHA256).Hash
+    $expected = ((Get-Content $shaFile) -split ' ')[0]
+
+    # Compare + output
+    if ($actual -eq $expected) {
+        Write-Host "✔ Hash matches for $FirmwarePath" -ForegroundColor Green
+    } else {
+        Write-Host "✘ Hash mismatch for $FirmwarePath" -ForegroundColor Red
+        Write-Host "Expected: $expected"
+        Write-Host "Actual:   $actual"
+    }
+}
+
+#endregion
+
+
+#region Aliases
+
+Set-Alias trfh Test-RouterFirmwareHash
+
+#endregion
