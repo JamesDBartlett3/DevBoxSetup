@@ -76,12 +76,13 @@ function Get-AvailableInputDevices {
     $deviceList = @()
 
     try {
-        $captureDevices = Get-CimInstance -ClassName Win32_SoundDevice
+        $captureDevices = Get-PnpDevice -Class AudioEndpoint -PresentOnly |
+            Where-Object { $_.Status -eq 'OK' -and $_.FriendlyName -match '^Microphone' }
         foreach ($device in $captureDevices) {
-            if (-not [string]::IsNullOrWhiteSpace($device.Name)) {
+            if (-not [string]::IsNullOrWhiteSpace($device.FriendlyName)) {
                 $deviceList += [pscustomobject]@{
-                    Id = [string]($device.PNPDeviceID ?? $device.Name)
-                    Name = [string]$device.Name
+                    Id = [string]$device.InstanceId
+                    Name = [string]$device.FriendlyName
                 }
             }
         }
@@ -157,15 +158,162 @@ function Set-MicrophoneMuteState {
         throw 'This script currently supports literal microphone mute/unmute on Windows only.'
     }
 
-    # Windows Core Audio mute/unmute is intentionally implemented via the native platform APIs rather than the default device switch.
-    # This routine is intentionally small and OS-specific for future adapter replacement.
     Write-Verbose ("Setting device {0} mute state to {1}" -f $DeviceId, $Muted)
 
-    # NOTE:
-    # The real Core Audio / IMMDevice call belongs here for a full implementation.
-    # For now, the script validates the device identity and defers the native mute API call to a Windows-specific adapter.
-    # This keeps the design aligned with the requested architecture while preserving a clean extension point for Linux later.
-    return
+    Add-CoreAudioInterop
+    $audioEndpointId = $DeviceId -replace '^SWD\\MMDEVAPI\\', ''
+    $hr = [CoreAudio.NativeMethods]::SetMute($audioEndpointId, $Muted)
+    if ($hr -ne 0) {
+        throw ("Unable to set microphone '{0}' mute state (HRESULT 0x{1:X8})." -f $DeviceId, $hr)
+    }
+}
+
+function Add-CoreAudioInterop {
+    if ($null -ne ([System.Management.Automation.PSTypeName]'CoreAudio.NativeMethods').Type) {
+        return
+    }
+
+    Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+
+namespace CoreAudio {
+    [ComImport]
+    [Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
+    public class MMDeviceEnumeratorComObject { }
+
+    [ComImport]
+    [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface IMMDeviceEnumerator {
+        int EnumAudioEndpoints(int dataFlow, uint stateMask, out IMMDeviceCollection devices);
+        int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice device);
+        int GetDevice([MarshalAs(UnmanagedType.LPWStr)] string id, out IMMDevice device);
+    }
+
+    [ComImport]
+    [Guid("D666063F-1587-4E43-81F1-B948E807363F")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface IMMDevice {
+        int Activate(ref Guid interfaceId, uint classContext, IntPtr activationParams, [MarshalAs(UnmanagedType.IUnknown)] out object interfacePointer);
+    }
+
+    [ComImport]
+    [Guid("0BD7A1BE-7A1A-44DB-8397-C0F1E4A0B4D1")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface IMMDeviceCollection { }
+
+    [ComImport]
+    [Guid("5CDF2C82-841E-4546-9722-0CF74078229A")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    public interface IAudioEndpointVolume {
+        int RegisterControlChangeNotify(IntPtr notify);
+        int UnregisterControlChangeNotify(IntPtr notify);
+        int GetChannelCount(out int count);
+        int SetMasterVolumeLevel(float level, ref Guid eventContext);
+        int SetMasterVolumeLevelScalar(float level, ref Guid eventContext);
+        int GetMasterVolumeLevel(out float level);
+        int GetMasterVolumeLevelScalar(out float level);
+        int SetChannelVolumeLevel(uint channel, float level, ref Guid eventContext);
+        int SetChannelVolumeLevelScalar(uint channel, float level, ref Guid eventContext);
+        int GetChannelVolumeLevel(uint channel, out float level);
+        int GetChannelVolumeLevelScalar(uint channel, out float level);
+        int SetMute([MarshalAs(UnmanagedType.Bool)] bool muted, ref Guid eventContext);
+    }
+
+    public static class NativeMethods {
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool RegisterHotKey(IntPtr windowHandle, int id, uint modifiers, uint virtualKey);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool UnregisterHotKey(IntPtr windowHandle, int id);
+
+        [DllImport("user32.dll")]
+        public static extern int GetMessage(out Message message, IntPtr windowHandle, uint minimumMessage, uint maximumMessage);
+
+        public static IMMDeviceEnumerator CreateDeviceEnumerator() {
+            return (IMMDeviceEnumerator)new MMDeviceEnumeratorComObject();
+        }
+
+        public static int SetMute(string id, bool muted) {
+            IMMDevice device = null;
+            IAudioEndpointVolume volume = null;
+            try {
+                int hr = CreateDeviceEnumerator().GetDevice(id, out device);
+                if (hr != 0) {
+                    return hr;
+                }
+
+                Guid interfaceId = new Guid("5CDF2C82-841E-4546-9722-0CF74078229A");
+                object interfacePointer;
+                hr = device.Activate(ref interfaceId, 23, IntPtr.Zero, out interfacePointer);
+                if (hr != 0) {
+                    return hr;
+                }
+                volume = (IAudioEndpointVolume)interfacePointer;
+                Guid eventContext = Guid.NewGuid();
+                return volume.SetMute(muted, ref eventContext);
+            }
+            finally {
+                if (volume != null) {
+                    Marshal.ReleaseComObject(volume);
+                }
+                if (device != null) {
+                    Marshal.ReleaseComObject(device);
+                }
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Message {
+            public IntPtr WindowHandle;
+            public uint MessageId;
+            public IntPtr WParam;
+            public IntPtr LParam;
+            public uint Time;
+            public int PointX;
+            public int PointY;
+        }
+    }
+}
+'@
+}
+
+function Get-HotkeyRegistration {
+    param(
+        [Parameter(Mandatory = $true)][string]$Hotkey
+    )
+
+    $modifiers = [uint32]0
+    $virtualKey = 0
+    foreach ($part in ($Hotkey -split '\+')) {
+        switch ($part) {
+            'Ctrl' { $modifiers = $modifiers -bor 0x0002; continue }
+            'Alt' { $modifiers = $modifiers -bor 0x0001; continue }
+            'Shift' { $modifiers = $modifiers -bor 0x0004; continue }
+            'Win' { $modifiers = $modifiers -bor 0x0008; continue }
+            default {
+                if ($part -match '^[A-Za-z0-9]$') {
+                    $virtualKey = [int][char]$part.ToUpperInvariant()
+                }
+                elseif ($part -match '^F([1-9]|1[0-2])$') {
+                    $virtualKey = 0x70 + [int]$Matches[1] - 1
+                }
+                else {
+                    throw "Unsupported hotkey key '$part'."
+                }
+            }
+        }
+    }
+
+    if ($virtualKey -eq 0) {
+        throw "Hotkey '$Hotkey' does not contain a key."
+    }
+
+    return [pscustomobject]@{
+        Modifiers = $modifiers
+        VirtualKey = [uint32]$virtualKey
+    }
 }
 
 function Test-ValidHotkey {
@@ -245,13 +393,43 @@ function Start-MicSwapMonitor {
         [Parameter(Mandatory = $true)][string]$Hotkey
     )
 
+    Add-CoreAudioInterop
+    $registration = Get-HotkeyRegistration -Hotkey $Hotkey
+    $hotkeyId = 1
+    if (-not [CoreAudio.NativeMethods]::RegisterHotKey([IntPtr]::Zero, $hotkeyId, $registration.Modifiers, $registration.VirtualKey)) {
+        throw "Unable to register hotkey '$Hotkey'. The hotkey may already be in use."
+    }
+
     $script:CurrentState = 'PrimaryActive'
     Write-Host ("Listening for hotkey '{0}' to swap between mic IDs '{1}' and '{2}'" -f $Hotkey, $PrimaryMicId, $SecondaryMicId) -ForegroundColor Cyan
 
-    # This is where a Windows global keyboard hook would be registered using RegisterHotKey or a low-level keyboard hook.
-    # The toggle logic is intentionally separated from the OS listener so the design supports a future Linux adapter.
-    while ($true) {
-        Start-Sleep -Seconds 1
+    try {
+        Set-MicrophoneMuteState -DeviceId $PrimaryMicId -Muted $false
+        Set-MicrophoneMuteState -DeviceId $SecondaryMicId -Muted $true
+
+        while ($true) {
+            $message = New-Object CoreAudio.NativeMethods+Message
+            $result = [CoreAudio.NativeMethods]::GetMessage([ref]$message, [IntPtr]::Zero, 0, 0)
+            if ($result -le 0) {
+                break
+            }
+
+            if ($message.MessageId -eq 0x0312 -and $message.WParam.ToInt32() -eq $hotkeyId) {
+                if ($script:CurrentState -eq 'PrimaryActive') {
+                    Set-MicrophoneMuteState -DeviceId $PrimaryMicId -Muted $true
+                    Set-MicrophoneMuteState -DeviceId $SecondaryMicId -Muted $false
+                    $script:CurrentState = 'SecondaryActive'
+                }
+                else {
+                    Set-MicrophoneMuteState -DeviceId $PrimaryMicId -Muted $false
+                    Set-MicrophoneMuteState -DeviceId $SecondaryMicId -Muted $true
+                    $script:CurrentState = 'PrimaryActive'
+                }
+            }
+        }
+    }
+    finally {
+        [void][CoreAudio.NativeMethods]::UnregisterHotKey([IntPtr]::Zero, $hotkeyId)
     }
 }
 
