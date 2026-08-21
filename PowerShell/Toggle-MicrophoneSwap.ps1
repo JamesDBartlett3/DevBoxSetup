@@ -396,12 +396,19 @@ function Start-MicSwapMonitor {
     Add-CoreAudioInterop
     $registration = Get-HotkeyRegistration -Hotkey $Hotkey
     $hotkeyId = 1
+    $exitHotkeyId = 2
+    $exitHotkey = 'Ctrl+Alt+Q'
+    $exitRegistration = Get-HotkeyRegistration -Hotkey $exitHotkey
     if (-not [CoreAudio.NativeMethods]::RegisterHotKey([IntPtr]::Zero, $hotkeyId, $registration.Modifiers, $registration.VirtualKey)) {
         throw "Unable to register hotkey '$Hotkey'. The hotkey may already be in use."
     }
+    if (-not [CoreAudio.NativeMethods]::RegisterHotKey([IntPtr]::Zero, $exitHotkeyId, $exitRegistration.Modifiers, $exitRegistration.VirtualKey)) {
+        [void][CoreAudio.NativeMethods]::UnregisterHotKey([IntPtr]::Zero, $hotkeyId)
+        throw "Unable to register exit hotkey '$exitHotkey'. The hotkey may already be in use."
+    }
 
     $script:CurrentState = 'PrimaryActive'
-    Write-Host ("Listening for hotkey '{0}' to swap between mic IDs '{1}' and '{2}'" -f $Hotkey, $PrimaryMicId, $SecondaryMicId) -ForegroundColor Cyan
+    Write-Host ("Listening for hotkey '{0}' to swap between mic IDs '{1}' and '{2}'. Press {3} to exit." -f $Hotkey, $PrimaryMicId, $SecondaryMicId, $exitHotkey) -ForegroundColor Cyan
 
     try {
         Set-MicrophoneMuteState -DeviceId $PrimaryMicId -Muted $false
@@ -411,6 +418,10 @@ function Start-MicSwapMonitor {
             $message = New-Object CoreAudio.NativeMethods+Message
             $result = [CoreAudio.NativeMethods]::GetMessage([ref]$message, [IntPtr]::Zero, 0, 0)
             if ($result -le 0) {
+                break
+            }
+
+            if ($message.MessageId -eq 0x0312 -and $message.WParam.ToInt32() -eq $exitHotkeyId) {
                 break
             }
 
@@ -429,6 +440,7 @@ function Start-MicSwapMonitor {
         }
     }
     finally {
+        [void][CoreAudio.NativeMethods]::UnregisterHotKey([IntPtr]::Zero, $exitHotkeyId)
         [void][CoreAudio.NativeMethods]::UnregisterHotKey([IntPtr]::Zero, $hotkeyId)
     }
 }
