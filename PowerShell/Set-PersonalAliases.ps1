@@ -1,6 +1,0 @@
-Set-Alias -Name "tc" -Value "Test-Connection"
-Set-Alias -Name "g" -Value "git"
-Set-Alias -Name "gs" -Value "git status"
-Set-Alias -Name "ga" -Value "git add"
-Set-Alias -Name "gco" -Value "git commit"
-Set-Alias -Name "locksmith" -Value "C:\Program Files\PowerToys\modules\FileLocksmith\PowerToys.FileLocksmithUI.exe"
