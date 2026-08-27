@@ -135,8 +135,8 @@ Foreach ($app in $bloatware) {
   Get-AppxPackage -allusers $app | Remove-AppxPackage
 }
 
-# Install Chocolatey
-# TODO: Re-evaluate which apps should be installed via Chocolatey
+# Chocolatey
+# TODO: replace Chocolatey packages with WinGet or scoop wherever possible
 # apps: dotnet, dotnet-sdk, dotnetcore, dotnetcore-sdk
 
 # Install Scoop
