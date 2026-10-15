@@ -34,10 +34,13 @@ param(
 )
 
 # ---------------- Elevation guard (param must be first) ----------------
-if (-not ([Security.Principal.WindowsPrincipal]
-          [Security.Principal.WindowsIdentity]::GetCurrent()
-        ).IsInRole(
-          [Security.Principal.WindowsBuiltInRole]::Administrator)) {
+$principal = [Security.Principal.WindowsPrincipal]::new(
+    [Security.Principal.WindowsIdentity]::GetCurrent()
+)
+
+if (-not $principal.IsInRole(
+    [Security.Principal.WindowsBuiltInRole]::Administrator
+)) {
 
     Write-Host "Elevation required. Relaunching as Administrator..."
 
